@@ -1,28 +1,19 @@
-// Array to keep track of reminders
 const reminders = [];
 let reminderIdCounter = 0;
-
-// Get DOM elements
 const reminderForm = document.getElementById('reminderForm');
 const reminderTextInput = document.getElementById('reminderText');
 const reminderDateInput = document.getElementById('reminderDate');
 const reminderTimeInput = document.getElementById('reminderTime');
 const reminderList = document.getElementById('reminderList');
-
-// Function to create a new reminder
 function addReminder(text, dateStr, timeStr) {
     const id = reminderIdCounter++;
     const now = new Date();
     const triggerTime = parseDateTime(dateStr, timeStr);
-
-    // Adjust reminder to the next day if time has passed
     if (triggerTime <= now) {
         triggerTime.setDate(triggerTime.getDate() + 1);
     }
 
     const timeoutDuration = triggerTime - now;
-
-    // Create a reminder object and add it to the list
     const reminder = {
         id,
         text,
@@ -31,15 +22,13 @@ function addReminder(text, dateStr, timeStr) {
             alert(`Reminder: ${text}`);
             removeReminder(id);
         }, timeoutDuration),
-        interval: setInterval(updateReminderList, 1000) // Update reminders every second
+        interval: setInterval(updateReminderList, 1000) 
     };
 
     reminders.push(reminder);
     saveReminders();
     updateReminderList();
 }
-
-// Function to parse date and time from strings
 function parseDateTime(dateStr, timeStr) {
     const [year, month, day] = dateStr.split('-').map(Number);
     const [time, modifier] = timeStr.split(' ');
@@ -52,15 +41,13 @@ function parseDateTime(dateStr, timeStr) {
             hours = 0;
         }
     } else if (hours === 12) {
-        hours = 0; // Convert 12 AM to 0 hours
+        hours = 0;
     } else if (hours < 12) {
-        hours += 12; // Convert 12-hour time to 24-hour time
+        hours += 12; 
     }
 
     return new Date(year, month - 1, day, hours, minutes);
 }
-
-// Function to remove a reminder
 function removeReminder(id) {
     const index = reminders.findIndex(r => r.id === id);
     if (index !== -1) {
@@ -71,8 +58,6 @@ function removeReminder(id) {
         updateReminderList();
     }
 }
-
-// Function to update the list of reminders in the UI
 function updateReminderList() {
     reminderList.innerHTML = '';
     const now = new Date();
@@ -84,26 +69,19 @@ function updateReminderList() {
         if (reminder.triggerTime <= now) {
             li.classList.add('expired');
         }
-
-        // Edit button
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit';
         editButton.className = 'edit';
         editButton.onclick = () => editReminder(reminder.id);
-
-        // Delete button
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.className = 'delete';
         deleteButton.onclick = () => removeReminder(reminder.id);
-
         li.appendChild(editButton);
         li.appendChild(deleteButton);
         reminderList.appendChild(li);
     });
 }
-
-// Function to calculate time left in a readable format
 function calculateTimeLeft(triggerTime, now) {
     const diff = triggerTime - now;
     if (diff <= 0) return 'Expired';
@@ -121,8 +99,6 @@ function calculateTimeLeft(triggerTime, now) {
         return `${minutes} minute${minutes !== 1 ? 's' : ''} left`;
     }
 }
-
-// Function to handle form submission
 function handleFormSubmit(event) {
     event.preventDefault();
     const text = reminderTextInput.value.trim();
@@ -131,8 +107,6 @@ function handleFormSubmit(event) {
 
     if (text && dateStr && timeStr) {
         addReminder(text, dateStr, timeStr);
-
-        // Clear the form inputs
         reminderTextInput.value = '';
         reminderDateInput.value = '';
         reminderTimeInput.value = '';
@@ -140,8 +114,6 @@ function handleFormSubmit(event) {
         alert('Please enter valid reminder text, date, and time.');
     }
 }
-
-// Function to handle editing a reminder
 function editReminder(id) {
     const reminder = reminders.find(r => r.id === id);
     if (reminder) {
@@ -151,28 +123,21 @@ function editReminder(id) {
         removeReminder(id);
     }
 }
-
-// Function to format date as YYYY-MM-DD
 function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
-
-// Function to format time as HH:MM AM/PM
 function formatTime(date, includeSeconds = false) {
     let hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
     const modifier = hours >= 12 ? 'PM' : 'AM';
     if (hours > 12) hours -= 12;
-    if (hours === 0) hours = 12; // Handle 12 AM case
-
+    if (hours === 0) hours = 12; 
     return `${hours}:${minutes.toString().padStart(2, '0')} ${modifier}${includeSeconds ? `:${seconds.toString().padStart(2, '0')}` : ''}`;
 }
-
-// Function to save reminders to localStorage
 function saveReminders() {
     localStorage.setItem('reminders', JSON.stringify(reminders.map(r => ({
         id: r.id,
@@ -180,8 +145,6 @@ function saveReminders() {
         triggerTime: r.triggerTime.toISOString()
     }))));
 }
-
-// Function to load reminders from localStorage
 function loadReminders() {
     const storedReminders = JSON.parse(localStorage.getItem('reminders')) || [];
     reminderIdCounter = storedReminders.length > 0 ? Math.max(...storedReminders.map(r => r.id)) + 1 : 0;
@@ -203,15 +166,11 @@ function loadReminders() {
             removeReminder(reminder.id);
         }, timeoutDuration);
 
-        reminder.interval = setInterval(updateReminderList, 1000); // Update reminders every second
+        reminder.interval = setInterval(updateReminderList, 1000); 
 
         reminders.push(reminder);
     });
 }
-
-// Event listener for form submission
 reminderForm.addEventListener('submit', handleFormSubmit);
-
-// Load reminders on page load
 loadReminders();
 updateReminderList();
