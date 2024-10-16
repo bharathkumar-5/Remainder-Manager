@@ -18,15 +18,15 @@ As a full-stack developer, I designed and implemented the Reminder Manager using
 
 ## Deployment Links
 
-- **Netlify**: [Reminder Manager Live Demo](https://your-netlify-link)
-- **GitHub**: [Reminder Manager Repository](https://github.com/yourusername/reminder-manager)
+- **Netlify**: [Reminder Manager Live Demo](https://github.com/bharathkumar-5/Remainder-Manager/tree/main)
+- **GitHub**: [Reminder Manager Repository](https://github.com/bharathkumar-5/Remainder-Manager/tree/main)
 
 ## Installation & Getting Started
 
 To get started, clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/yourusername/reminder-manager.git
+git clone https://github.com/bharathkumar-5/Remainder-Manager/tree/main
 ```
 
 Navigate to the project directory and open `index.html` in your preferred web browser.
